@@ -1,0 +1,8 @@
+include header
+
+h2 Categories
+div(class="row")
+    each val in categories
+        div
+            img(src="http://zoocomplex.com.ua/image/" + val.image)
+            span(class="title_categories") #{val.name}
