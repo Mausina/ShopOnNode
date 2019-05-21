@@ -1,8 +1,17 @@
-include header
-
-h2 Categories
-div(class="row")
-    each val in categories
-        div
-            img(src="http://zoocomplex.com.ua/image/" + val.image)
-            span(class="title_categories") #{val.name}
+doctype html
+html
+    include ../includes/head
+    include ../includes/header
+    body
+        .container
+            h2 Categories
+            .row
+                each val in categories
+                    .col-md-4
+                        .card(style="width: 18rem;")
+                            img(src="http://zoocomplex.com.ua/image/" + val.image class="card-img-top" alt="...")
+                            .card-body
+                                h5(class="card-title") #{val.name}
+                                p(class="card-text") Some quick example text to build on the card title and make up the bulk of the card's content.
+                                a(href="#" class="btn btn-primary") Переход куда-нибудь
+        include ../includes/footer.pug
