@@ -1,0 +1,23 @@
+.col-md-4.header_content-sidebar {
+    padding-left: 0;
+}
+.menu_list {
+    list-style: none;
+    padding-left: 0;
+    width: 80%;
+}
+
+li.menu_list-item {
+    /*border: 1px solid #2d2d2d;*/
+    height: fit-content;
+    padding: 1px 0 1px 9px;
+    margin-bottom: 15px;
+}
+li.menu_list-item a {
+    color: #000000;
+    text-decoration: none;
+}
+li.menu_list-item:hover {
+    box-shadow: 0 0 10px rgba(0,0,0,0.5);
+    cursor: pointer;
+}

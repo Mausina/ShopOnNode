@@ -4,7 +4,12 @@ html
     include ../includes/header
     body
         .container
-            h1 My Site
-            p Welcome to my super lame site.
-            include ../includes/main_slider
-            include ../includes/footer.pug
+            .header_content-box
+                .row
+                    .col-md-3.header_content-sidebar
+                        include ../includes/sidebar
+                    .col-md-9
+                        include ../includes/main_slider
+                        include ../includes/featured
+            include ../includes/main-content
+        include ../includes/footer.pug

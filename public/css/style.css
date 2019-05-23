@@ -1,3 +1,5 @@
-h2{
-    color: red;
+@import "sidebar.css";
+/*main_header_block*/
+.header_content-box {
+    margin-top: 15px;
 }

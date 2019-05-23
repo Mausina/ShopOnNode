@@ -1,5 +1,4 @@
-di(class="owl-carousel")
-    div Your Content1
-    div Your Content2
-    div Your Content3
-    div Your Content4
+.container.slider_container
+    div(class="owl-carousel")
+        each val in banners
+            img(src="http://new.zoocomplex.com.ua/image/" + val.image class="d-block w-100" alt="...")
