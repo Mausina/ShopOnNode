@@ -26,7 +26,7 @@ app.get('/',function (req,res) {
     let sql = `SELECT * FROM  ${DB_PREFIX}category c LEFT JOIN ${DB_PREFIX}category_description cd ON (c.category_id = cd.category_id) WHERE parent_id = 0`;
     let sqlBanner = `SELECT image FROM ${DB_PREFIX}banner_image`;
     let sqlFeatured = `SELECT op.product_id,model,image,name FROM ${DB_PREFIX}product AS op JOIN oc_product_description AS opd WHERE op.product_id = opd.product_id LIMIT 0,3`;
-
+    // console.log(sql);
     let categories  = new Promise(function (resolve, reject) {
         con.query(
             sql,
@@ -68,12 +68,15 @@ app.get('/',function (req,res) {
 
 
 app.get('/cat',function (req,res) {
-    console.log(req.query.id);
+
     let catId = req.query.id;
+
+    let sqlCategories = `SELECT * FROM  ${DB_PREFIX}category c LEFT JOIN ${DB_PREFIX}category_description cd ON (c.category_id = cd.category_id) LEFT JOIN ${DB_PREFIX}category_to_store c2s ON (c.category_id = c2s.category_id)  WHERE c.parent_id = 0 AND c.status = '1' ORDER BY c.sort_order, LCASE(cd.name)`;
+    let sqlCat = `SELECT * FROM ${DB_PREFIX}category as oc JOIN ${DB_PREFIX}category_description as od WHERE oc.category_id = od.category_id AND oc.category_id =`+ req.query.id;
 
     let cat  = new Promise(function (resolve, reject) {
         con.query(
-            'SELECT * FROM oc_category WHERE id='+catId,
+            sqlCat,
             function (error,result) {
                if(error) reject(err);
                resolve(result)
@@ -81,9 +84,10 @@ app.get('/cat',function (req,res) {
         )
     });
 
-    let products  = new Promise(function (resolve, reject) {
+    // console.log(sqlCat);
+    let categories  = new Promise(function (resolve, reject) {
         con.query(
-            'SELECT * FROM oc_products WHERE category='+catId,
+            sqlCategories,
             function (error,result) {
                 if(error) reject(err);
                 resolve(result)
@@ -91,11 +95,11 @@ app.get('/cat',function (req,res) {
         )
     });
 
-    Promise.all([cat,products]).then(function (value) {
-        console.log(value[0]);
+    Promise.all([cat,categories]).then(function (value) {
+        // console.log(value[0]);
         res.render('cat',{
             cat: JSON.parse(JSON.stringify(value[0])),
-            products: JSON.parse(JSON.stringify(value[1]))
+            categories:JSON.parse(JSON.stringify(value[1]))
         })
     })
 });
