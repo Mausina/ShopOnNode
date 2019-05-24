@@ -1,0 +1,9 @@
+.products-box
+    .row
+        each val in products
+            .col-md-4
+                .card(style="width: 18rem;")
+                    img(src="http://new.zoocomplex.com.ua/image/" + val.image class="card-img-top" alt="...")
+                    .card-body
+                        h5(class="card-title") #{val.name}
+                        a(href="#" class="btn btn-primary") Переход куда-нибудь

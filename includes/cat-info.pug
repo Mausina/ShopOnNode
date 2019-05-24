@@ -1,8 +1,8 @@
-.card.mb-3
-    each val in cat
-        img(src="http://new.zoocomplex.com.ua/image/" + val.image class="card-img-top" alt="...")
+each val in cat
+    include subcategory-list
+    .card.mb-3
         .card-body
             h5(class="card-title") #{val.name}
             p(class="card-text cat_text") #{val.description}
             p(class="card-text")
-                small(class="text-muted") Last updated #{new Date(val.date_modified.toString()).toDateString()}
+               small(class="text-muted") Last updated #{new Date(val.date_modified.toString()).toDateString()}

@@ -1,0 +1,11 @@
+.subcategory-box
+    .row
+        each val in subcategory
+            .col-md-3
+                a(class="sub-cat_card" href="/subcategory?id="+val.category_id)
+                    .card(style="width: 11.5rem;")
+                        img(src="http://zoocomplex.com.ua/image/" + val.image class="card-img-top" alt="...")
+                        .card-body
+                            span(class="sub-cat_card-title") #{val.name}
+
+

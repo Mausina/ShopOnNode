@@ -72,6 +72,7 @@ app.get('/cat',function (req,res) {
     let catId = req.query.id;
 
     let sqlCategories = `SELECT * FROM  ${DB_PREFIX}category c LEFT JOIN ${DB_PREFIX}category_description cd ON (c.category_id = cd.category_id) LEFT JOIN ${DB_PREFIX}category_to_store c2s ON (c.category_id = c2s.category_id)  WHERE c.parent_id = 0 AND c.status = '1' ORDER BY c.sort_order, LCASE(cd.name)`;
+    let sqlSubcategory = `SELECT * FROM  ${DB_PREFIX}category c LEFT JOIN ${DB_PREFIX}category_description cd ON (c.category_id = cd.category_id) LEFT JOIN ${DB_PREFIX}category_to_store c2s ON (c.category_id = c2s.category_id)  WHERE c.parent_id = ${catId} AND c.status = '1' ORDER BY c.sort_order, LCASE(cd.name)`;
     let sqlCat = `SELECT * FROM ${DB_PREFIX}category as oc JOIN ${DB_PREFIX}category_description as od WHERE oc.category_id = od.category_id AND oc.category_id =`+ req.query.id;
 
     let cat  = new Promise(function (resolve, reject) {
@@ -80,6 +81,16 @@ app.get('/cat',function (req,res) {
             function (error,result) {
                if(error) reject(err);
                resolve(result)
+            }
+        )
+    });
+
+    let subcategory  = new Promise(function (resolve, reject) {
+        con.query(
+            sqlSubcategory,
+            function (error,result) {
+                if(error) reject(err);
+                resolve(result)
             }
         )
     });
@@ -95,11 +106,66 @@ app.get('/cat',function (req,res) {
         )
     });
 
-    Promise.all([cat,categories]).then(function (value) {
+    Promise.all([cat,categories,subcategory]).then(function (value) {
         // console.log(value[0]);
         res.render('cat',{
             cat: JSON.parse(JSON.stringify(value[0])),
-            categories:JSON.parse(JSON.stringify(value[1]))
+            categories:JSON.parse(JSON.stringify(value[1])),
+            subcategory:JSON.parse(JSON.stringify(value[2]))
+        })
+    })
+});
+
+app.get('/subcategory',function (req,res) {
+    console.log(req.query.id);
+    let catId = req.query.id;
+
+    let sqlCategories = `SELECT * FROM  ${DB_PREFIX}category c LEFT JOIN ${DB_PREFIX}category_description cd ON (c.category_id = cd.category_id) LEFT JOIN ${DB_PREFIX}category_to_store c2s ON (c.category_id = c2s.category_id)  WHERE c.parent_id = 0 AND c.status = '1' ORDER BY c.sort_order, LCASE(cd.name)`;
+    let sqlCat = `SELECT * FROM ${DB_PREFIX}category as oc JOIN ${DB_PREFIX}category_description as od WHERE oc.category_id = od.category_id AND oc.category_id =`+ req.query.id;
+
+    let sqlProducts = `SELECT op.product_id,op.model,op.image,op.price,opd.name,opd.description 
+    FROM  oc_product_to_category as optc 
+    JOIN ${DB_PREFIX}product as op ON optc.product_id = op.product_id 
+    JOIN ${DB_PREFIX}product_description as opd  ON opd.product_id = op.product_id
+    WHERE optc.category_id = ${req.query.id}
+    ORDER BY optc.product_id DESC LIMIT 0, 10`;
+
+    let cat  = new Promise(function (resolve, reject) {
+        con.query(
+            sqlCat,
+            function (error,result) {
+                if(error) reject(err);
+                resolve(result)
+            }
+        )
+    });
+
+    let categories  = new Promise(function (resolve, reject) {
+        con.query(
+            sqlCategories,
+            function (error,result) {
+                if(error) reject(err);
+                resolve(result)
+            }
+        )
+    });
+    // console.log(sqlProducts);
+    let products  = new Promise(function (resolve, reject) {
+        con.query(
+            sqlProducts,
+            function (error,result) {
+                if(error) reject(err);
+                resolve(result)
+            }
+        )
+    });
+
+    Promise.all([cat,categories,products]).then(function (value) {
+        // console.log(value[2]);
+        res.render('subcategory',{
+            cat: JSON.parse(JSON.stringify(value[0])),
+            categories:JSON.parse(JSON.stringify(value[1])),
+            products:JSON.parse(JSON.stringify(value[2])),
         })
     })
 });

@@ -1,0 +1,13 @@
+a.sub-cat_card .card {
+    border: 0;
+}
+
+a.sub-cat_card {
+    color: #2d2d2d;
+    text-decoration: none;
+    display: block;
+    margin-bottom: 15px;
+}
+a.sub-cat_card:hover {
+    box-shadow: 0 0 10px rgba(0,0,0,0.5);
+}
