@@ -7,3 +7,14 @@
                     .card-body
                         h5(class="card-title") #{val.name}
                         a(href="#" class="btn btn-primary") Переход куда-нибудь
+    nav(class="page-navigation"  aria-label="Page navigation example")
+        ul(class="pagination" id="pagination")
+            li(class="page-item")
+                a(class="page-link" href="#" aria-label="Previous")
+                    span(aria-hidden="true") &laquo;
+            while iterator < productsLength
+                li(class="page-item")
+                    a(class="page-link "+ "page-"+ iterator href="/subcategory?id="+ catId +"&page=" + iterator rel="page-" + iterator)= iterator++
+            li(class="page-item")
+                a(class="page-link" href="#" aria-label="Next")
+                    span(aria-hidden="true") &raquo;

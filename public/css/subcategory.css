@@ -11,3 +11,6 @@ a.sub-cat_card {
 a.sub-cat_card:hover {
     box-shadow: 0 0 10px rgba(0,0,0,0.5);
 }
+nav.page-navigation {
+    margin-top: 15px;
+}

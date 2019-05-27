@@ -117,8 +117,11 @@ app.get('/cat',function (req,res) {
 });
 
 app.get('/subcategory',function (req,res) {
-    console.log(req.query.id);
+    // console.log(req.query.page);
+
     let catId = req.query.id;
+
+    let page = req.query.page ? req.query.page : 0;
 
     let sqlCategories = `SELECT * FROM  ${DB_PREFIX}category c LEFT JOIN ${DB_PREFIX}category_description cd ON (c.category_id = cd.category_id) LEFT JOIN ${DB_PREFIX}category_to_store c2s ON (c.category_id = c2s.category_id)  WHERE c.parent_id = 0 AND c.status = '1' ORDER BY c.sort_order, LCASE(cd.name)`;
     let sqlCat = `SELECT * FROM ${DB_PREFIX}category as oc JOIN ${DB_PREFIX}category_description as od WHERE oc.category_id = od.category_id AND oc.category_id =`+ req.query.id;
@@ -128,7 +131,7 @@ app.get('/subcategory',function (req,res) {
     JOIN ${DB_PREFIX}product as op ON optc.product_id = op.product_id 
     JOIN ${DB_PREFIX}product_description as opd  ON opd.product_id = op.product_id
     WHERE optc.category_id = ${req.query.id}
-    ORDER BY optc.product_id DESC LIMIT 0, 10`;
+    ORDER BY optc.product_id DESC `;
 
     let cat  = new Promise(function (resolve, reject) {
         con.query(
@@ -155,17 +158,27 @@ app.get('/subcategory',function (req,res) {
             sqlProducts,
             function (error,result) {
                 if(error) reject(err);
-                resolve(result)
+
+                let size = 10; //размер подмассива
+                let subcategory = [];
+
+                for (let i = 0; i < Math.ceil(result.length / size); i++) {
+                    subcategory[i] = result.slice((i * size), (i * size) + size);
+                }
+                resolve(subcategory)
             }
         )
     });
 
     Promise.all([cat,categories,products]).then(function (value) {
-        // console.log(value[2]);
+        // console.log(value[2].length);
         res.render('subcategory',{
             cat: JSON.parse(JSON.stringify(value[0])),
             categories:JSON.parse(JSON.stringify(value[1])),
-            products:JSON.parse(JSON.stringify(value[2])),
+            products:JSON.parse(JSON.stringify(value[2][page])),
+            catId: catId,
+            productsLength: value[2].length,
+            iterator: 0
         })
     })
 });
