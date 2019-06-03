@@ -45,7 +45,7 @@ $(document).ready(function(){
     var page = '';
 
     if(url.pathname === '/subcategory'){
-        page = url.searchParams.get("page") ? url.searchParams.get("page"): 0;
+        page = url.searchParams.get("page") ? url.searchParams.get("page") : 1;
         console.log(url.searchParams.get("page"));
 
         $("a[rel='page-" + page + "']").parent('li').addClass('active');
@@ -66,6 +66,19 @@ $(document).ready(function(){
         window.location.href = window.location.origin + urlForPagination[0].attributes[1].value;
         return false;
     });
+
+    // var pageSize = 10;
+    //
+    // var showPage = function(page) {
+    //     $(".line-content").hide();
+    //     $(".line-content").each(function(n) {
+    //         if (n >= pageSize * (page - 1) && n < pageSize * page)
+    //             $(this).show();
+    //     });
+    // };
+    //
+    // showPage(1);
+
 });
 
 

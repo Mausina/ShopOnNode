@@ -121,8 +121,9 @@ app.get('/subcategory',function (req,res) {
 
     let catId = req.query.id;
 
-    let page = req.query.page ? req.query.page : 0;
-    let offset = page + "0";
+    let page = req.query.page ? req.query.page : 1;
+
+    let offset = page === 1 ? 0 : (page - 1) + "0";
 
 
     let sqlCategories = `SELECT * FROM  ${DB_PREFIX}category c LEFT JOIN ${DB_PREFIX}category_description cd ON (c.category_id = cd.category_id) LEFT JOIN ${DB_PREFIX}category_to_store c2s ON (c.category_id = c2s.category_id)  WHERE c.parent_id = 0 AND c.status = '1' ORDER BY c.sort_order, LCASE(cd.name)`;
@@ -140,6 +141,9 @@ app.get('/subcategory',function (req,res) {
     JOIN oc_product as op ON optc.product_id = op.product_id
     WHERE optc.category_id = ${req.query.id}
     ORDER BY optc.product_id DESC`;
+
+
+    console.log(offset);
 
     let cat  = new Promise(function (resolve, reject) {
         con.query(
@@ -190,13 +194,18 @@ app.get('/subcategory',function (req,res) {
 
     Promise.all([cat,categories,products,productsLength]).then(function (value) {
         // console.log(JSON.parse(JSON.stringify(value[2])));
+
+
         res.render('subcategory',{
             cat: JSON.parse(JSON.stringify(value[0])),
             categories:JSON.parse(JSON.stringify(value[1])),
             products:JSON.parse(JSON.stringify(value[2][0])),
             catId: catId,
-            productsLength: Math.ceil(JSON.parse(JSON.stringify(value[3][0].length)) / 10),
-            iterator: 0
+            fisrtpage:1,
+            lastpage:Math.ceil(JSON.parse(JSON.stringify(value[3][0].length)) / 10),
+            current_page: page,
+            next_page:  page < Math.ceil(JSON.parse(JSON.stringify(value[3][0].length)) / 10) ? Number(Number(page)+1) : Math.ceil(JSON.parse(JSON.stringify(value[3][0].length)) / 10),
+            prev_page: page > 1 ? Number(Number(page)-1) : 1
         })
     })
 });

@@ -9,12 +9,12 @@
                         a(href="#" class="btn btn-primary") Переход куда-нибудь
     nav(class="page-navigation"  aria-label="Page navigation example")
         ul(class="pagination" id="pagination")
-            li(class="page-item")
-                a(class="page-link" href="#" aria-label="Previous")
+            li(class="page-item prev")
+                a(class="page-link "+ "page-"+ prev_page href="/subcategory?id="+ catId +"&page=" + prev_page  aria-label="Previous")
                     span(aria-hidden="true") &laquo;
-            while iterator < productsLength
-                li(class="page-item")
-                    a(class="page-link "+ "page-"+ iterator href="/subcategory?id="+ catId +"&page=" + iterator rel="page-" + iterator)= iterator++
-            li(class="page-item")
-                a(class="page-link" href="#" aria-label="Next")
+            while fisrtpage <= lastpage
+                li(class="page-item line-content")
+                    a(class="page-link "+ "page-"+ fisrtpage href="/subcategory?id="+ catId +"&page=" + fisrtpage rel="page-" + fisrtpage)= fisrtpage++
+            li(class="page-item next")
+                a(class="page-link "+ "page-"+ next_page href="/subcategory?id="+ catId +"&page=" + next_page)
                     span(aria-hidden="true") &raquo;
