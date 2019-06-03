@@ -122,6 +122,8 @@ app.get('/subcategory',function (req,res) {
     let catId = req.query.id;
 
     let page = req.query.page ? req.query.page : 0;
+    let offset = page + "0";
+
 
     let sqlCategories = `SELECT * FROM  ${DB_PREFIX}category c LEFT JOIN ${DB_PREFIX}category_description cd ON (c.category_id = cd.category_id) LEFT JOIN ${DB_PREFIX}category_to_store c2s ON (c.category_id = c2s.category_id)  WHERE c.parent_id = 0 AND c.status = '1' ORDER BY c.sort_order, LCASE(cd.name)`;
     let sqlCat = `SELECT * FROM ${DB_PREFIX}category as oc JOIN ${DB_PREFIX}category_description as od WHERE oc.category_id = od.category_id AND oc.category_id =`+ req.query.id;
@@ -131,7 +133,13 @@ app.get('/subcategory',function (req,res) {
     JOIN ${DB_PREFIX}product as op ON optc.product_id = op.product_id 
     JOIN ${DB_PREFIX}product_description as opd  ON opd.product_id = op.product_id
     WHERE optc.category_id = ${req.query.id}
-    ORDER BY optc.product_id DESC `;
+    ORDER BY optc.product_id DESC LIMIT 10 OFFSET ${Number(offset)} `;
+
+    let productLength = `SELECT COUNT(op.product_id) as length
+    FROM  oc_product_to_category as optc
+    JOIN oc_product as op ON optc.product_id = op.product_id
+    WHERE optc.category_id = ${req.query.id}
+    ORDER BY optc.product_id DESC`;
 
     let cat  = new Promise(function (resolve, reject) {
         con.query(
@@ -146,6 +154,16 @@ app.get('/subcategory',function (req,res) {
     let categories  = new Promise(function (resolve, reject) {
         con.query(
             sqlCategories,
+            function (error,result) {
+                if(error) reject(err);
+                resolve(result)
+            }
+        )
+    });
+
+    let productsLength  = new Promise(function (resolve, reject) {
+        con.query(
+            productLength,
             function (error,result) {
                 if(error) reject(err);
                 resolve(result)
@@ -170,14 +188,14 @@ app.get('/subcategory',function (req,res) {
         )
     });
 
-    Promise.all([cat,categories,products]).then(function (value) {
-        // console.log(value[2].length);
+    Promise.all([cat,categories,products,productsLength]).then(function (value) {
+        // console.log(JSON.parse(JSON.stringify(value[2])));
         res.render('subcategory',{
             cat: JSON.parse(JSON.stringify(value[0])),
             categories:JSON.parse(JSON.stringify(value[1])),
-            products:JSON.parse(JSON.stringify(value[2][page])),
+            products:JSON.parse(JSON.stringify(value[2][0])),
             catId: catId,
-            productsLength: value[2].length,
+            productsLength: Math.ceil(JSON.parse(JSON.stringify(value[3][0].length)) / 10),
             iterator: 0
         })
     })

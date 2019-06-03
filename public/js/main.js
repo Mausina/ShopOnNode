@@ -49,8 +49,7 @@ $(document).ready(function(){
         console.log(url.searchParams.get("page"));
 
         $("a[rel='page-" + page + "']").parent('li').addClass('active');
-        // // console.log(page);
-        // // console.log(window.location);
+
     }
 
 
