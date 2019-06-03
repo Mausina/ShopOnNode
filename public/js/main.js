@@ -1,5 +1,4 @@
 $(document).ready(function(){
-
     String.prototype.toDOM=function(){
         var d=document
             ,i
@@ -47,6 +46,7 @@ $(document).ready(function(){
     if(url.pathname === '/subcategory'){
         page = url.searchParams.get("page") ? url.searchParams.get("page") : 1;
         console.log(url.searchParams.get("page"));
+        var catId = url.searchParams.get("id");
 
         $("a[rel='page-" + page + "']").parent('li').addClass('active');
 
@@ -67,17 +67,7 @@ $(document).ready(function(){
         return false;
     });
 
-    // var pageSize = 10;
-    //
-    // var showPage = function(page) {
-    //     $(".line-content").hide();
-    //     $(".line-content").each(function(n) {
-    //         if (n >= pageSize * (page - 1) && n < pageSize * page)
-    //             $(this).show();
-    //     });
-    // };
-    //
-    // showPage(1);
+
 
 });
 

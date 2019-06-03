@@ -14,3 +14,103 @@ a.sub-cat_card:hover {
 nav.page-navigation {
     margin-top: 15px;
 }
+.page_panel {
+    max-height: 40;
+    background: #bbb;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.7), 0 1px 2px white;
+    position: relative;
+    z-index: 1;
+    padding: 7px;
+    margin: 0 auto;
+    border-radius: 5px;
+    float: left;
+}
+.page_panel ul{
+    float: left;
+}
+.page_panel:before,
+.page_panel:after {
+    content: '';
+    display: table;
+}
+
+.page_panel:after {
+    clear: both;
+}
+
+.page_panel li, .page_panel span {
+    float: left;
+    position: relative;
+    margin-right: 7px;
+    text-decoration: none;
+
+    height: 26px;
+    width: 26px;
+
+    color: #232323;
+    font: 11px/26px "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    text-align: center;
+    text-shadow: 1px 1px 1px white;
+    list-style: none;
+    cursor: pointer;
+}
+
+.page_panel li:before, .page_panel span:before {
+    pointer-events: none;
+    content: '';
+    position: absolute;
+    z-index: -1;
+    height: 200%;
+    width: 100%;
+    border-radius: 3px;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.25));
+    transition: all 0.2s ease;
+    left: 0;
+    top: 0;
+}
+
+.page_panel li:after, .page_panel span:after {
+    z-index: -1;
+    position: absolute;
+    content: '';
+    height: 100%;
+    width: 100%;
+    background-color: #fafafa;
+    background-image: linear-gradient(to top, rgba(0, 0, 0, 0.15), transparent);
+    border-radius: 3px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.5), inset 0 2px 2px white;
+    left: 0;
+    right: 0;
+    top: 0;
+    transition: all 0.2s ease;
+}
+
+.page_panel li:last-child, span.last {
+    margin: 0;
+}
+span.next{margin-left: 7px;}
+
+.page_panel li:hover::before, .page_panel span:hover::before {
+    height: 220%;
+}
+
+.page_panel li:hover::after, .page_panel span:hover::after {
+    background-color: #fff;
+}
+
+.page_panel li.active::before{
+    height: 150%;
+}
+
+.page_panel li.active::after {
+    background-color: #eee;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.3), inset 0 1px 1px white;
+}
+.page_panel li.active {
+    font-weight: bold;
+}
+.clear{
+    clear: both;
+    height: 30px;
+}
+#box{width: 450px; margin: 40px auto;}
